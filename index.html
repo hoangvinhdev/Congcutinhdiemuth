@@ -1,0 +1,429 @@
+
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Công cụ tính điểm xét tuyển UTH 2026</title>
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-hover: #1d4ed8;
+            --primary-light: #eff6ff;
+            --success: #10b981;
+            --success-light: #ecfdf5;
+            --bg-color: #f8fafc;
+            --card-bg: #ffffff;
+            --text-main: #0f172a;
+            --text-muted: #64748b;
+            --border-color: #e2e8f0;
+            --radius-md: 12px;
+            --radius-lg: 20px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            line-height: 1.6;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 2rem;
+            padding-top: 1rem;
+        }
+
+        .header h1 {
+            color: var(--primary);
+            font-size: 1.8rem;
+            font-weight: 800;
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .header p {
+            color: var(--text-muted);
+            font-size: 1rem;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border-radius: var(--radius-lg);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.01);
+            padding: 2.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .section-title {
+            display: flex;
+            align-items: center;
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--text-main);
+            margin-bottom: 1.2rem;
+            padding-bottom: 0.8rem;
+            border-bottom: 2px solid var(--primary-light);
+        }
+
+        .section-title span {
+            background: var(--primary);
+            color: white;
+            width: 28px;
+            height: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            margin-right: 12px;
+            font-size: 0.9rem;
+        }
+
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--text-main);
+            margin-bottom: 0.5rem;
+        }
+
+        input {
+            width: 100%;
+            padding: 0.8rem 1rem;
+            border: 1.5px solid var(--border-color);
+            border-radius: var(--radius-md);
+            font-size: 1rem;
+            color: var(--text-main);
+            transition: all 0.3s ease;
+            background-color: var(--bg-color);
+        }
+
+        input:focus {
+            border-color: var(--primary);
+            background-color: var(--card-bg);
+            box-shadow: 0 0 0 4px var(--primary-light);
+            outline: none;
+        }
+
+        input::placeholder {
+            color: #94a3b8;
+            font-size: 0.9rem;
+        }
+
+        .btn-submit {
+            width: 100%;
+            padding: 1.2rem;
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            border-radius: var(--radius-md);
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px -1px rgba(37, 99, 235, 0.2);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .btn-submit:hover {
+            background-color: var(--primary-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(37, 99, 235, 0.3);
+        }
+
+        .btn-submit:active {
+            transform: translateY(0);
+        }
+
+        /* Result Area */
+        .result-box {
+            background: var(--success-light);
+            border: 2px solid #a7f3d0;
+            border-radius: var(--radius-lg);
+            padding: 2rem;
+            margin-top: 2rem;
+            display: none;
+            animation: slideUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .result-header {
+            display: flex;
+            align-items: center;
+            color: var(--success);
+            margin-bottom: 1.5rem;
+        }
+
+        .result-header svg {
+            width: 32px;
+            height: 32px;
+            margin-right: 12px;
+        }
+
+        .result-header h3 {
+            font-size: 1.4rem;
+            font-weight: 800;
+        }
+
+        .result-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.8rem 0;
+            border-bottom: 1px dashed #a7f3d0;
+            font-size: 1rem;
+        }
+
+        .result-row:last-of-type {
+            border-bottom: none;
+        }
+
+        .result-value {
+            font-weight: 700;
+            color: var(--text-main);
+        }
+
+        .final-score {
+            margin-top: 1.5rem;
+            padding-top: 1.5rem;
+            border-top: 2px solid #34d399;
+            text-align: center;
+        }
+
+        .final-score span {
+            display: block;
+            font-size: 1.1rem;
+            color: var(--text-muted);
+            margin-bottom: 0.5rem;
+        }
+
+        .final-score .score {
+            font-size: 3rem;
+            font-weight: 900;
+            color: var(--success);
+            text-shadow: 2px 2px 0px rgba(16, 185, 129, 0.1);
+        }
+
+        .highlight-text {
+            color: var(--primary);
+            font-weight: 700;
+            background: var(--primary-light);
+            padding: 2px 8px;
+            border-radius: 4px;
+        }
+
+        /* Mobile Adjustments */
+        @media (max-width: 600px) {
+            .card {
+                padding: 1.5rem;
+            }
+            .grid-3 {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+            .header h1 {
+                font-size: 1.4rem;
+            }
+            .result-row {
+                flex-direction: column;
+            }
+            .result-value {
+                margin-top: 4px;
+                color: var(--primary);
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header">
+        <h1>Tính Điểm Xét Tuyển UTH</h1>
+        <p>Áp dụng công thức Phương thức kết hợp năm 2026</p>
+    </div>
+    
+    <div class="card">
+        <form id="calcForm">
+            
+            <!-- ĐIỂM HỌC BẠ -->
+            <div class="section-title"><span>1</span> Điểm Học bạ Lớp 12</div>
+            <div class="grid-3">
+                <div class="form-group">
+                    <label for="hb1">Điểm Môn 1</label>
+                    <input type="number" id="hb1" min="0" max="10" step="0.1" required placeholder="VD: 8.5">
+                </div>
+                <div class="form-group">
+                    <label for="hb2">Điểm Môn 2</label>
+                    <input type="number" id="hb2" min="0" max="10" step="0.1" required placeholder="VD: 7.9">
+                </div>
+                <div class="form-group">
+                    <label for="hb3">Điểm Môn 3</label>
+                    <input type="number" id="hb3" min="0" max="10" step="0.1" required placeholder="VD: 8.2">
+                </div>
+            </div>
+
+            <!-- ĐIỂM THI TỐT NGHIỆP -->
+            <div class="section-title"><span>2</span> Điểm Thi Tốt nghiệp THPT</div>
+            <div class="grid-3">
+                <div class="form-group">
+                    <label for="tn1">Điểm Môn 1</label>
+                    <input type="number" id="tn1" min="0" max="10" step="0.1" required placeholder="VD: 8.0">
+                </div>
+                <div class="form-group">
+                    <label for="tn2">Điểm Môn 2</label>
+                    <input type="number" id="tn2" min="0" max="10" step="0.1" required placeholder="VD: 7.5">
+                </div>
+                <div class="form-group">
+                    <label for="tn3">Điểm Môn 3</label>
+                    <input type="number" id="tn3" min="0" max="10" step="0.1" required placeholder="VD: 9.0">
+                </div>
+            </div>
+
+            <!-- ĐIỂM ĐGNL & ĐIỂM CỘNG -->
+            <div class="section-title"><span>3</span> Điểm ĐGNL & Điểm Ưu tiên</div>
+            <div class="grid-3" style="grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));">
+                <div class="form-group">
+                    <label for="dgnl">Điểm ĐGNL ĐHQG (Thang 1200)</label>
+                    <input type="number" id="dgnl" min="0" max="1200" step="1" placeholder="Để trống nếu không thi">
+                </div>
+                <div class="form-group">
+                    <label for="diemCong">Điểm ưu tiên / khuyến khích</label>
+                    <input type="number" id="diemCong" min="0" max="10" step="0.05" value="0">
+                </div>
+            </div>
+
+            <button type="button" class="btn-submit" onclick="tinhDiemXetTuyen()">Bắt đầu tính điểm</button>
+        </form>
+
+        <!-- KẾT QUẢ -->
+        <div class="result-box" id="resultBox">
+            <div class="result-header">
+                <svg fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
+                <h3>Kết Quả Xét Tuyển</h3>
+            </div>
+            
+            <div id="resultDetails">
+                <!-- Nội dung được sinh bằng Javascript -->
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function tinhDiemXetTuyen() {
+        // --- 1. Học bạ ---
+        let hb1 = parseFloat(document.getElementById('hb1').value) || 0;
+        let hb2 = parseFloat(document.getElementById('hb2').value) || 0;
+        let hb3 = parseFloat(document.getElementById('hb3').value) || 0;
+        let maxHB = Math.max(hb1, hb2, hb3);
+        let diemHB12 = ((hb1 + hb2 + hb3 + maxHB) / 4) * 3; 
+
+        // --- 2. Thi tốt nghiệp ---
+        let tn1 = parseFloat(document.getElementById('tn1').value) || 0;
+        let tn2 = parseFloat(document.getElementById('tn2').value) || 0;
+        let tn3 = parseFloat(document.getElementById('tn3').value) || 0;
+        let maxTN = Math.max(tn1, tn2, tn3);
+        let diemTN = ((tn1 + tn2 + tn3 + maxTN) / 4) * 3;
+
+        // --- 3. ĐGNL ---
+        let dgnlInput = document.getElementById('dgnl').value;
+        let diemDGNL_QuyDoi = dgnlInput !== "" ? (parseFloat(dgnlInput) / 1200) * 30 : 0;
+
+        // --- 4. Điểm ưu tiên ---
+        let diemCong = parseFloat(document.getElementById('diemCong').value) || 0;
+
+        // --- 5. So sánh tìm lợi thế ---
+        let maxThanhPhan = Math.max(diemDGNL_QuyDoi, diemHB12, diemTN);
+        let loaiDiemMax = "";
+        
+        if (maxThanhPhan === diemDGNL_QuyDoi && dgnlInput !== "") {
+            loaiDiemMax = "Đánh giá năng lực";
+        } else if (maxThanhPhan === diemHB12) {
+            loaiDiemMax = "Học bạ lớp 12";
+        } else {
+            loaiDiemMax = "Thi Tốt nghiệp THPT";
+        }
+
+        // --- 6. Công thức ---
+        let tongDiemXT = (0.4 * maxThanhPhan) + (0.3 * diemHB12) + (0.3 * diemTN) + diemCong;
+
+        // --- 7. Render giao diện ---
+        let resultDetails = document.getElementById('resultDetails');
+        
+        let dgnlHtml = dgnlInput !== "" 
+            ? `<div class="result-row"><span>Điểm ĐGNL (đã quy đổi về thang 30)</span> <span class="result-value">${diemDGNL_QuyDoi.toFixed(2)}</span></div>`
+            : `<div class="result-row"><span>Điểm ĐGNL</span> <span class="result-value" style="color: #94a3b8; font-weight:normal;">Không tham gia</span></div>`;
+
+        resultDetails.innerHTML = `
+            <div class="result-row">
+                <span>Điểm Học bạ quy đổi</span>
+                <span class="result-value">${diemHB12.toFixed(2)}</span>
+            </div>
+            <div class="result-row">
+                <span>Điểm Tốt nghiệp quy đổi</span>
+                <span class="result-value">${diemTN.toFixed(2)}</span>
+            </div>
+            ${dgnlHtml}
+            <div class="result-row">
+                <span>Điểm ưu tiên / khuyến khích</span>
+                <span class="result-value">+ ${diemCong.toFixed(2)}</span>
+            </div>
+            <div class="result-row" style="background: white; padding: 10px; border-radius: 8px; margin-top: 10px;">
+                <span>Thành phần thế mạnh nhất (Nhân hệ số 0.4)</span>
+                <span class="highlight-text">${loaiDiemMax}</span>
+            </div>
+            
+            <div class="final-score">
+                <span>Tổng Điểm Xét Tuyển Của Bạn</span>
+                <div class="score">${tongDiemXT.toFixed(2)}</div>
+                <span style="font-size: 0.9rem; color: #64748b; margin-top: 8px;">(Thang điểm 30)</span>
+            </div>
+        `;
+
+        let resultBox = document.getElementById('resultBox');
+        resultBox.style.display = 'block';
+        
+        // Tạo hiệu ứng load lại animation
+        resultBox.style.animation = 'none';
+        resultBox.offsetHeight; /* trigger reflow */
+        resultBox.style.animation = null; 
+
+        // Cuộn màn hình tới kết quả
+        setTimeout(() => {
+            resultBox.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }, 100);
+    }
+</script>
+
+</body>
+</html>
+
+```
